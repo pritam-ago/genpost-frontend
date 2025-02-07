@@ -125,7 +125,12 @@ export default function Profile() {
   };
 
   if (!user) {
-    return <Text style={styles.loadingText}>Loading...</Text>; 
+    return (
+    <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+      <Text style={styles.loadingText}>Loading...</Text>
+    </View>
+    
+  ); 
   }
 
   return (

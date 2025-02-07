@@ -1,14 +1,11 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, Button, ScrollView, TouchableOpacity, ActivityIndicator } from 'react-native';
 import { generatePost } from '../../api/generate';
+import { useRouter } from 'expo-router';
 
 interface GeneratedContent {
     content: string;
     hashtags: string[];
-}
-
-interface GeneratedPost {
-    platforms: Record<string, GeneratedContent>;
 }
 
 const platformsList = ["x (twitter)", "instagram", "linkedin", "facebook"];
@@ -16,9 +13,9 @@ const platformsList = ["x (twitter)", "instagram", "linkedin", "facebook"];
 const CreatePost: React.FC = () => {
     const [prompt, setPrompt] = useState<string>('');
     const [selectedPlatforms, setSelectedPlatforms] = useState<string[]>([]);
-    const [generatedPost, setGeneratedPost] = useState<GeneratedPost | null>(null);
     const [loading, setLoading] = useState<boolean>(false);
     const [error, setError] = useState<string>('');
+    const router = useRouter();
 
     const togglePlatform = (platform: string) => {
         setSelectedPlatforms((prev) =>
@@ -41,7 +38,7 @@ const CreatePost: React.FC = () => {
         setError('');
         try {
             const data = await generatePost(prompt, selectedPlatforms);
-            setGeneratedPost(data);
+            router.push('/');
         } catch (err: any) {
             setError(err.message);
         } finally {
@@ -78,7 +75,7 @@ const CreatePost: React.FC = () => {
                 <Text style={{ fontSize: 18, fontWeight: 'bold', color: '#333', marginBottom: 10 }}>
                     Select Platforms:
                 </Text>
-                <View style={{ flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'center', marginTop: 10, marginBottom: 20 }}>    
+                <View style={{ flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'center', marginTop: 10, marginBottom: 20 }}>
                     {platformsList.map((platform) => (
                         <TouchableOpacity
                             key={platform}
@@ -106,39 +103,6 @@ const CreatePost: React.FC = () => {
                 )}
 
                 {error && <Text style={{ color: 'red', marginTop: 10, fontSize: 16 }}>{error}</Text>}
-
-                {generatedPost && (
-                    <View style={{ marginTop: 30, width: '100%', maxWidth: 400 }}>
-                        <Text style={{ fontSize: 20, fontWeight: 'bold', color: '#333', textAlign: 'center' }}>
-                            Generated Post:
-                        </Text>
-                        {Object.entries(generatedPost.platforms).map(([platform, post], index) => (
-                            <View
-                                key={index}
-                                style={{
-                                    marginTop: 15,
-                                    padding: 15,
-                                    backgroundColor: '#fff',
-                                    borderRadius: 10,
-                                    shadowColor: '#000',
-                                    shadowOffset: { width: 0, height: 1 },
-                                    shadowOpacity: 0.1,
-                                    shadowRadius: 5,
-                                    elevation: 3,
-                                    marginBottom: 15,
-                                }}
-                            >
-                                <Text style={{ fontSize: 18, fontWeight: 'bold', color: '#333' }}>
-                                    {platform.toUpperCase()}:
-                                </Text>
-                                <Text style={{ marginTop: 10, fontSize: 16, color: '#555' }}>{post.content}</Text>
-                                <Text style={{ color: '#007bff', marginTop: 10, fontSize: 16 }}>
-                                    {post.hashtags.join(' ')}
-                                </Text>
-                            </View>
-                        ))}
-                    </View>
-                )}
             </View>
         </ScrollView>
     );

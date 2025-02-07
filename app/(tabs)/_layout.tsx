@@ -5,10 +5,11 @@ export default function TabLayout() {
   return (
     <Tabs>
       <Tabs.Screen
-        name="home"
+        name="(homeStack)"
         options={{
           title: "Home",
           tabBarIcon: ({ color }) => <Ionicons name="home" size={24} color={color} />,
+          headerShown: false,
         }}
       />
       <Tabs.Screen
