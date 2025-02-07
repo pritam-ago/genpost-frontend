@@ -4,7 +4,7 @@ import { Link } from "expo-router";
 export default function Welcome() {
   return (
     <View style={{ flex: 1, justifyContent: "center", alignItems: "center", backgroundColor: "#021F59" }}>
-      <Text style={{ fontSize: 28, fontWeight: "bold", color: "#F2AD94", marginBottom: 30 }}>
+      <Text style={{ fontSize: 28, fontWeight: "bold", color: "#F2B705", marginBottom: 30 }}>
         Welcome
       </Text>
 

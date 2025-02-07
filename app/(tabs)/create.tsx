@@ -103,7 +103,7 @@ const styles = StyleSheet.create({
     heading: {
         fontSize: 24,
         fontWeight: 'bold',
-        color: '#F2AD94',
+        color: '#F2B705',
         textAlign: 'center',
         marginBottom: 20,
     },
@@ -123,7 +123,7 @@ const styles = StyleSheet.create({
     subheading: {
         fontSize: 18,
         fontWeight: 'bold',
-        color: '#F2AD94',
+        color: '#F2B705',
         marginBottom: 10,
     },
     platformContainer: {

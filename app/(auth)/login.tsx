@@ -5,6 +5,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useRouter } from "expo-router";
 import { login } from "../../api/auth";
 import { Ionicons } from "@expo/vector-icons"; 
+import { Link } from "expo-router";
 
 const validateEmail = (email: string) => {
   const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -66,13 +67,13 @@ export default function Login() {
                 top: 20, 
                 left: 20,
                 zIndex: 1,
-                backgroundColor: "#F2AD94",
+                backgroundColor: "#F2B705",
                 borderRadius: 20,
                 padding: 5, 
                 marginTop: 20,}}
               onPress={() => router.replace('./welcome')}
             />
-      <Text style={{ marginBottom: 30, fontSize: 26, fontWeight: "bold", color: "#F2AD94" }}>
+      <Text style={{ marginBottom: 30, fontSize: 26, fontWeight: "bold", color: "#F2B705" }}>
         Login
       </Text>
 
@@ -82,7 +83,7 @@ export default function Login() {
         onChangeText={setEmail}
         style={{
           height: 45,
-          borderColor: "#F2AD94",
+          borderColor: "#F2B705",
           borderWidth: 2,
           borderRadius: 10,
           marginBottom: 15,
@@ -102,7 +103,7 @@ export default function Login() {
           secureTextEntry={!passwordVisible}
           style={{
             height: 45,
-            borderColor: "#F2AD94",
+            borderColor: "#F2B705",
             borderWidth: 2,
             borderRadius: 10,
             marginBottom: 20,
@@ -125,7 +126,7 @@ export default function Login() {
           <Ionicons
             name={passwordVisible ? "eye-off" : "eye"} 
             size={24}
-            color="#F2AD94"
+            color="#F2B705"
           />
         </TouchableOpacity>
       </View>
@@ -148,6 +149,8 @@ export default function Login() {
       {loading && (
         <ActivityIndicator size="large" color="#3D90D9" style={{ marginTop: 20 }} />
       )}
+
+      <Link href="./signup" style={{ fontSize: 12, color: "#fff", marginTop: 30 }}>New here? Create an account here</Link>
     </View>
   );
 }

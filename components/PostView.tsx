@@ -92,7 +92,7 @@ const styles = StyleSheet.create({
   },
   errorText: {
     fontSize: 18,
-    color: "#F2AD94",
+    color: "#F2B705",
     marginBottom: 10,
   },
   retryButton: {

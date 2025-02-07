@@ -99,27 +99,27 @@ export default function Signup() {
                 top: 20, 
                 left: 20,
                 zIndex: 1,
-                backgroundColor: "#F2AD94",
+                backgroundColor: "#F2B705",
                 borderRadius: 20,
                 padding: 5, 
                 marginTop: 20,}}
               onPress={() => router.replace('./welcome')}
             />
-      <Text style={{ marginBottom: 30, fontSize: 25, fontWeight: "bold", color: "#F2AD94" }}>Signup Screen</Text>
+      <Text style={{ marginBottom: 30, fontSize: 25, fontWeight: "bold", color: "#F2B705" }}>Signup Screen</Text>
 
       <TextInput
         placeholder="Email"
         value={email}
         onChangeText={setEmail}
         style={{
-          height: 40,
-          borderColor: "#024873",
-          borderWidth: 1,
-          marginBottom: 10,
+          height: 45,
+          borderColor: "#F2B705",
+          borderWidth: 2,
+          borderRadius: 10,
+          marginBottom: 15,
           width: "100%",
-          paddingHorizontal: 10,
-          borderRadius: 8,
-          backgroundColor: "#FFF5E6", 
+          paddingHorizontal: 15,
+          backgroundColor: "#FFF",
         }}
         keyboardType="email-address"
         autoCapitalize="none"
@@ -130,14 +130,14 @@ export default function Signup() {
         value={name}
         onChangeText={setName}
         style={{
-          height: 40,
-          borderColor: "#024873",
-          borderWidth: 1,
-          marginBottom: 10,
+          height: 45,
+          borderColor: "#F2B705",
+          borderWidth: 2,
+          borderRadius: 10,
+          marginBottom: 15,
           width: "100%",
-          paddingHorizontal: 10,
-          borderRadius: 8,
-          backgroundColor: "#FFF5E6", 
+          paddingHorizontal: 15,
+          backgroundColor: "#FFF",
         }}
         autoCapitalize="words"
       />
@@ -147,14 +147,14 @@ export default function Signup() {
         value={username}
         onChangeText={setUsername}
         style={{
-          height: 40,
-          borderColor: "#024873",
-          borderWidth: 1,
-          marginBottom: 10,
+          height: 45,
+          borderColor: "#F2B705",
+          borderWidth: 2,
+          borderRadius: 10,
+          marginBottom: 15,
           width: "100%",
-          paddingHorizontal: 10,
-          borderRadius: 8,
-          backgroundColor: "#FFF5E6",  
+          paddingHorizontal: 15,
+          backgroundColor: "#FFF",
         }}
         autoCapitalize="none"
       />
@@ -166,14 +166,14 @@ export default function Signup() {
           onChangeText={setPassword}
           secureTextEntry={!passwordVisible}
           style={{
-            height: 40,
-            borderColor: "#024873",
-            borderWidth: 1,
-            marginBottom: 10,
-            width: "100%",
-            paddingHorizontal: 10,
-            borderRadius: 8,
-            backgroundColor: "#FFF5E6", 
+            height: 45,
+          borderColor: "#F2B705",
+          borderWidth: 2,
+          borderRadius: 10,
+          marginBottom: 15,
+          width: "100%",
+          paddingHorizontal: 15,
+          backgroundColor: "#FFF",
           }}
           autoCapitalize="none"
         />
@@ -197,14 +197,14 @@ export default function Signup() {
           onChangeText={setConfirmPassword}
           secureTextEntry={!confirmPasswordVisible}
           style={{
-            height: 40,
-            borderColor: "#024873",
-            borderWidth: 1,
-            marginBottom: 20,
+            height: 45,
+            borderColor: "#F2B705",
+            borderWidth: 2,
+            borderRadius: 10,
+            marginBottom: 15,
             width: "100%",
-            paddingHorizontal: 10,
-            borderRadius: 8,
-            backgroundColor: "#FFF5E6",
+            paddingHorizontal: 15,
+            backgroundColor: "#FFF",
           }}
           autoCapitalize="none"
         />
@@ -221,18 +221,26 @@ export default function Signup() {
         </TouchableOpacity>
       </View>
 
-      {error && <Text style={{ color: "#F2AD94", marginBottom: 10, fontSize: 14 }}>{error}</Text>}
+      {error && <Text style={{ color: "#F2B705", marginBottom: 10, fontSize: 14 }}>{error}</Text>}
 
-      <Button
-        title={loading ? "Signing Up..." : "Signup"}
+      <TouchableOpacity
         onPress={handleSignup}
-        disabled={loading}
-        color="#F2AD94"
-      />
+        style={{
+          backgroundColor: "#3D90D9",
+          paddingVertical: 12,
+          paddingHorizontal: 50,
+          borderRadius: 10,
+          marginTop: 10,
+        }}
+      >
+        <Text style={{ fontSize: 18, fontWeight: "bold", color: "#fff" }}>
+          Signup
+        </Text>
+      </TouchableOpacity>
 
       {loading && <ActivityIndicator size="large" color="#66BCF2" style={{ marginTop: 20 }} />}
 
-      <Link href="./login" style={{ fontSize: 18, color: "#fff", marginTop: 30 }}>Go to Login</Link>
+      <Link href="./login" style={{ fontSize: 12, color: "#fff", marginTop: 30 }}>Have an account already? Login here</Link>
     </View>
   );
 }

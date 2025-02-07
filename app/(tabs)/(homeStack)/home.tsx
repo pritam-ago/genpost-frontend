@@ -47,7 +47,7 @@ const styles = StyleSheet.create({
   headerText: {
     fontSize: 24,
     fontWeight: "bold",
-    color: "#F2AD94",
+    color: "#F2B705",
     marginTop: 25,
     fontFamily: "Roboto-Bold",
   },

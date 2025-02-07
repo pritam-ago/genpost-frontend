@@ -27,6 +27,7 @@ export default function Profile() {
   const [dropdownVisible, setDropdownVisible] = useState<boolean>(false);
   const [personalInfoView, setPersonalInfoView] = useState<boolean>(false);
   const [postView, setPostView] = useState<boolean>(true);
+  const [activeTab, setActiveTab] = useState("posts"); 
 
   const onRefresh = () => {
     setRefreshing(true);
@@ -142,11 +143,13 @@ export default function Profile() {
   const handlePersonalInfoView = () => {
     setPersonalInfoView(true);
     setPostView(false);
+    setActiveTab("personalInfo");
   }
 
   const handlePostView = () => {
     setPostView(true);
     setPersonalInfoView(false);
+    setActiveTab("posts");
   }
 
   if (!user) {
@@ -186,12 +189,13 @@ export default function Profile() {
       </View>
 
       <View style={styles.tabBar}>
-        <TouchableOpacity style={styles.tabButton} onPress={handlePostView}>
+        <TouchableOpacity style={[styles.tabButton, activeTab === "posts" && styles.activeTab]} onPress={handlePostView}>
           <Text style={styles.tabText}>Posts</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.tabButton} onPress={handlePersonalInfoView}>
-          <Text style={styles.tabText}>Personal Info</Text>
-        </TouchableOpacity>
+        <TouchableOpacity style={[styles.tabButton, activeTab === "personalInfo" && styles.activeTab]} onPress={handlePersonalInfoView}>
+  <Text style={styles.tabText}>Personal Info</Text>
+</TouchableOpacity>
+
       </View>
     <View style={{paddingHorizontal: 20, width: "100%",}}>
         {postView && (<PostView />)}
@@ -311,7 +315,7 @@ const styles = StyleSheet.create({
     paddingVertical: 20,
     width: "100%",
     borderBottomWidth: 1,
-    marginBottom: 30,
+    marginBottom: 0,
     marginTop: 40,
   },
   username: {
@@ -334,10 +338,13 @@ const styles = StyleSheet.create({
     width: "100%",
     paddingVertical: 10,
     borderBottomWidth: 1,
+    backgroundColor: "#024873",
   },
   tabButton: {
     alignItems: "center",
-    width : "50%"
+    width: "50%",
+    paddingVertical: 8,
+    paddingHorizontal: 20,
   },
   tabText: {
     fontSize: 16,
@@ -422,5 +429,12 @@ const styles = StyleSheet.create({
   dropdownText: {
     fontSize: 16,
     color: "#333",
+  },
+  activeTab: {
+    backgroundColor: "#F2B705",
+    transform: [{ scale: 1.1 }],
+  },
+  activeTabText: {
+    color: "#021F59", 
   },
 });
