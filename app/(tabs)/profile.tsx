@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { 
-  View, Text, TextInput, Button, Alert, RefreshControl, ScrollView, StyleSheet, TouchableOpacity 
-} from "react-native";
+  View, Text, TextInput, Button, Alert, RefreshControl, ScrollView, StyleSheet, TouchableOpacity, Image } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useRouter } from "expo-router";
 import { getUser, deleteUser, updateUser, verifyPassword } from "../../api/user";
+import { Ionicons } from "@expo/vector-icons";
+import PostView from "@/components/PostView";
 
 interface User {
   _id: string;
@@ -17,13 +18,15 @@ export default function Profile() {
   const router = useRouter();
   const [user, setUser] = useState<User | null>(null);
   const [editable, setEditable] = useState<boolean>(false);
-  const [newEmail, setNewEmail] = useState<string>("");
-  const [newName, setNewName] = useState<string>("");
-  const [newUsername, setNewUsername] = useState<string>("");
-  const [newPassword, setNewPassword] = useState<string>("");
+  const [newEmail, setNewEmail] = useState<string>(""); 
+  const [newName, setNewName] = useState<string>(""); 
+  const [newUsername, setNewUsername] = useState<string>(""); 
+  const [newPassword, setNewPassword] = useState<string>(""); 
   const [currentPassword, setCurrentPassword] = useState<string>("");
-
   const [refreshing, setRefreshing] = useState(false);
+  const [dropdownVisible, setDropdownVisible] = useState<boolean>(false);
+  const [personalInfoView, setPersonalInfoView] = useState<boolean>(false);
+  const [postView, setPostView] = useState<boolean>(true);
 
   const onRefresh = () => {
     setRefreshing(true);
@@ -55,7 +58,12 @@ export default function Profile() {
   }, [refreshing]);
 
   const handleEditToggle = () => {
-    setEditable(!editable);
+    if(personalInfoView){
+      setEditable(true);
+    }else{
+      setPostView(false);
+      setPersonalInfoView(true);
+    }
   };
 
   const handleUpdate = async () => {
@@ -124,13 +132,29 @@ export default function Profile() {
     router.replace("/welcome");
   };
 
+  const toggleDropdown = () => {
+    setDropdownVisible(!dropdownVisible); 
+  };
+
+  const hideDropdown = () => {
+    setDropdownVisible(false); 
+  };
+  const handlePersonalInfoView = () => {
+    setPersonalInfoView(true);
+    setPostView(false);
+  }
+
+  const handlePostView = () => {
+    setPostView(true);
+    setPersonalInfoView(false);
+  }
+
   if (!user) {
     return (
-    <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-      <Text style={styles.loadingText}>Loading...</Text>
-    </View>
-    
-  ); 
+      <View style={styles.loadingContainer}>
+        <Text style={styles.loadingText}>Loading...</Text>
+      </View>
+    );
   }
 
   return (
@@ -138,16 +162,54 @@ export default function Profile() {
       contentContainerStyle={styles.container}
       refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
     >
-      <View style={styles.profileContainer}>
-        <Text style={styles.heading}>Profile</Text>
+      <View style={styles.profileHeader}>
+        <Text style={styles.username}>{user.username}</Text>
+        <Text style={styles.name}>{user.name}</Text>
+        <TouchableOpacity style={styles.editButton} onPress={toggleDropdown}>
+          <Ionicons name="settings" size={30} color="#000" />
+        </TouchableOpacity>
+
+        {dropdownVisible && (
+          <View style={styles.dropdownMenu}>
+
+            {!editable && (<TouchableOpacity style={styles.dropdownItem} onPress={() => { handleEditToggle(); hideDropdown(); }}>
+              <Text style={styles.dropdownText}>Edit Profile</Text>
+            </TouchableOpacity>)}
+            <TouchableOpacity style={styles.dropdownItem} onPress={() => { handleDeleteAccount(); hideDropdown(); }}>
+              <Text style={styles.dropdownText}>Delete Account</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.dropdownItem} onPress={() => { handleLogout(); hideDropdown(); }}>
+              <Text style={styles.dropdownText}>Logout</Text>
+            </TouchableOpacity>
+          </View>
+        )}
+      </View>
+
+      <View style={styles.tabBar}>
+        <TouchableOpacity style={styles.tabButton} onPress={handlePostView}>
+          <Text style={styles.tabText}>Posts</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.tabButton} onPress={handlePersonalInfoView}>
+          <Text style={styles.tabText}>Personal Info</Text>
+        </TouchableOpacity>
+      </View>
+    <View style={{paddingHorizontal: 20, width: "100%",}}>
+        {postView && (<PostView />)}
+      </View>
+      
+
+      {personalInfoView &&
+        (<View style={styles.profileInfo}>
+        <Text style={styles.sectionTitle}>Profile Information</Text>
 
         <View style={styles.inputContainer}>
-          <Text style={styles.label}>Email:</Text>
+          <Text style={styles.label}>Email</Text>
           {editable ? (
             <TextInput
               value={newEmail}
               onChangeText={setNewEmail}
               style={styles.input}
+              placeholder="Email"
             />
           ) : (
             <Text style={styles.value}>{user.email}</Text>
@@ -155,12 +217,13 @@ export default function Profile() {
         </View>
 
         <View style={styles.inputContainer}>
-          <Text style={styles.label}>Name:</Text>
+          <Text style={styles.label}>Name</Text>
           {editable ? (
             <TextInput
               value={newName}
               onChangeText={setNewName}
               style={styles.input}
+              placeholder="Name"
             />
           ) : (
             <Text style={styles.value}>{user.name}</Text>
@@ -168,12 +231,13 @@ export default function Profile() {
         </View>
 
         <View style={styles.inputContainer}>
-          <Text style={styles.label}>Username:</Text>
+          <Text style={styles.label}>Username</Text>
           {editable ? (
             <TextInput
               value={newUsername}
               onChangeText={setNewUsername}
               style={styles.input}
+              placeholder="Username"
             />
           ) : (
             <Text style={styles.value}>{user.username}</Text>
@@ -183,54 +247,42 @@ export default function Profile() {
         {editable && (
           <>
             <View style={styles.inputContainer}>
-              <Text style={styles.label}>Current Password:</Text>
+              <Text style={styles.label}>Current Password</Text>
               <TextInput
                 value={currentPassword}
                 onChangeText={setCurrentPassword}
                 secureTextEntry
                 style={styles.input}
+                placeholder="Current password"
               />
             </View>
 
             <View style={styles.inputContainer}>
-              <Text style={styles.label}>New Password:</Text>
+              <Text style={styles.label}>New Password</Text>
               <TextInput
                 value={newPassword}
                 onChangeText={setNewPassword}
                 secureTextEntry
                 style={styles.input}
+                placeholder="New password"
               />
             </View>
           </>
         )}
-      <TouchableOpacity style={styles.button} onPress={editable ? handleUpdate : handleEditToggle}>
-                <Text style={styles.buttonText}>{editable ? "Save Changes" : "Edit Profile"}</Text>
-              </TouchableOpacity>
-        {editable ? (
-          <>
+
+        <View style={styles.buttonsContainer}>
+
+          {editable && (<TouchableOpacity style={styles.button} onPress={editable ? handleUpdate : handleEditToggle}>
+            <Text style={styles.buttonText}>Save Changes</Text>
+          </TouchableOpacity>)}
+
+          {editable && (
             <TouchableOpacity style={styles.cancelButton} onPress={() => setEditable(false)}>
-              <Text style={styles.buttonText}>Cancel Edit</Text>
-              </TouchableOpacity>
-          </>
-        ):null}
-
-        
-        {
-          !editable ? (
-            <>
-            <TouchableOpacity style={styles.deleteButton} onPress={handleDeleteAccount}>
-          <Text style={styles.buttonText}>Delete Account</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
-          <Text style={styles.buttonText}>Logout</Text>
-        </TouchableOpacity>
-            </>
-          ) :
-          null
-        }
-        
-      </View>
+              <Text style={styles.cancelButtonText}>Cancel Edit</Text>
+            </TouchableOpacity>
+          )}
+        </View>
+      </View>)}
     </ScrollView>
   );
 }
@@ -238,78 +290,137 @@ export default function Profile() {
 const styles = StyleSheet.create({
   container: {
     flexGrow: 1,
+    justifyContent: "flex-start",
+    alignItems: "center",
+    backgroundColor: "#021F59",
+  },
+  loadingContainer: {
+    flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    padding: 20,
-    backgroundColor: "#f5f5f5",
+    backgroundColor: "#021F59",
   },
-  profileContainer: {
-    backgroundColor: "#fff",
-    padding: 20,
-    borderRadius: 10,
+  loadingText: {
+    fontSize: 18,
+    fontWeight: "600",
+    color: "#fff",
+  },
+  profileHeader: {
+    backgroundColor: "#66BCF2",
+    alignItems: "center",
+    paddingVertical: 20,
     width: "100%",
-    maxWidth: 400,
-    elevation: 3,
+    borderBottomWidth: 1,
+    marginBottom: 30,
+    marginTop: 40,
   },
-  heading: {
-    fontSize: 26,
+  username: {
+    fontSize: 24,
     fontWeight: "bold",
-    marginBottom: 20,
-    textAlign: "center",
+    color: "#000",
   },
-  inputContainer: {
-    marginBottom: 15,
+  name: {
+    fontSize: 14,
+    color: "#000",
   },
-  label: {
+  editButton: {
+    position: "absolute",
+    top: 10,
+    right: 20,
+  },
+  tabBar: {
+    flexDirection: "row",
+    justifyContent: "space-around",
+    width: "100%",
+    paddingVertical: 10,
+    borderBottomWidth: 1,
+  },
+  tabButton: {
+    alignItems: "center",
+    width : "50%"
+  },
+  tabText: {
     fontSize: 16,
     fontWeight: "600",
+    color: "#fff",
+  },
+  profileInfo: {
+    paddingHorizontal: 20,
+    width: "100%",
+  },
+  sectionTitle: {
+    fontSize: 20,
+    fontWeight: "600",
+    marginBottom: 15,
+    color: "#fff",
+  },
+  inputContainer: {
+    marginBottom: 20,
+  },
+  label: {
+    fontSize: 14,
+    fontWeight: "600",
+    color: "#fff",
   },
   value: {
     fontSize: 16,
-    padding: 10,
-    backgroundColor: "#e0e0e0",
-    borderRadius: 5,
+    padding: 12,
+    backgroundColor: "#3D90D9",
+    borderRadius: 8,
+    color: "#fff",
   },
   input: {
     borderWidth: 1,
-    padding: 10,
-    borderRadius: 5,
+    padding: 12,
+    borderRadius: 8,
     borderColor: "#ccc",
+    backgroundColor: "#fff",
+    color: "#333",
   },
   button: {
     backgroundColor: "#4CAF50",
-    padding: 12,
-    borderRadius: 5,
+    padding: 14,
+    width: "60%",
+    borderRadius: 8,
     alignItems: "center",
-    marginTop: 10,
+    marginTop: 15,
   },
   cancelButton: {
-    backgroundColor: "red",
-    padding: 12,
-    borderRadius: 5,
+    backgroundColor: "#f44336",
+    padding: 14,
+    borderRadius: 8,
+    width: "60%",
     alignItems: "center",
     marginTop: 10,
   },
-  deleteButton: {
-    backgroundColor: "red",
-    padding: 12,
-    borderRadius: 5,
-    alignItems: "center",
-    marginTop: 10,
-  },
-  logoutButton: {
-    backgroundColor: "#007BFF",
-    padding: 12,
-    borderRadius: 5,
-    alignItems: "center",
-    marginTop: 10,
+  cancelButtonText: {
+    color: "#fff",
+    fontSize: 16,
   },
   buttonText: {
     color: "#fff",
     fontSize: 16,
   },
-  loadingText: {
-    fontSize: 18,
-    textAlign: "center",
+  buttonsContainer: {
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  dropdownMenu: {
+    position: "absolute",
+    top: 50,
+    right: 15,
+    backgroundColor: "#fff",
+    borderRadius: 10,
+    padding: 10,
+    elevation: 5,
+    zIndex: 10,
+  },
+  dropdownItem: {
+    paddingVertical: 8,
+    paddingHorizontal: 15,
+  },
+  dropdownText: {
+    fontSize: 16,
+    color: "#333",
   },
 });

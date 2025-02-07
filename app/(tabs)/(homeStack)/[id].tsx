@@ -27,7 +27,14 @@ export default function Post() {
     if (id) fetchPost();
   }, [id]);
 
-  if (loading) return <ActivityIndicator size="large" color="#0000ff" />;
+  if (loading) return (
+    <View style={styles.container}>
+      <ActivityIndicator size="large" color="#fff" />
+    </View>
+      
+
+  );
+
   if (error) return <Text style={{ color: "red" }}>{error}</Text>;
 
   return (
@@ -59,16 +66,18 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingHorizontal: 20,
-    paddingTop: 60,
+    paddingTop: 80,
+    backgroundColor: "#021F59",
   },
   backButton: {
     position: "absolute",
     top: 20, 
     left: 20,
     zIndex: 1,
-    backgroundColor: "#fff",
+    backgroundColor: "#F2AD94",
     borderRadius: 20,
     padding: 5, 
+    marginTop: 20,
   },
   scrollView: {
     paddingBottom: 50, 
@@ -77,7 +86,8 @@ const styles = StyleSheet.create({
   prompt: {
     fontSize: 22,
     fontWeight: "bold",
-    marginBottom: 20,
-    marginTop: 25,
+    marginBottom: 40,
+    marginTop: 45,
+    color: "#fff"
   },
 });

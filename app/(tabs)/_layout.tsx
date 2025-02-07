@@ -1,9 +1,26 @@
 import { Tabs } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
+import { StatusBar } from "expo-status-bar";
 
 export default function TabLayout() {
   return (
-    <Tabs>
+    <>
+    <StatusBar
+            hidden={false}
+            style="light"
+            translucent={true} 
+            backgroundColor="transparent" 
+          />
+    <Tabs
+      screenOptions={{
+        tabBarStyle: {
+          backgroundColor: "#1F305C", 
+          borderTopWidth: 0, 
+        },
+        tabBarActiveTintColor: "#F2AD94",
+        tabBarInactiveTintColor: "#66BCF2", 
+      }}
+    >
       <Tabs.Screen
         name="(homeStack)"
         options={{
@@ -28,6 +45,6 @@ export default function TabLayout() {
           headerShown: false,
         }}
       />
-    </Tabs>
+    </Tabs></>
   );
 }

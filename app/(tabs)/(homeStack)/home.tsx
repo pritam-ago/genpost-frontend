@@ -1,66 +1,35 @@
-import { View, Text, RefreshControl, ScrollView, ActivityIndicator, TouchableOpacity, StyleSheet } from "react-native";
-import { useEffect, useState, useCallback } from "react";
-import PostCard from "@/components/PostCard";
-import { getPosts } from "@/api/post";
-import { useFocusEffect } from "@react-navigation/native";
-import { useRouter } from "expo-router";
+import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Animated } from "react-native";
+import { useState } from "react";
+import PostView from "@/components/PostView";
 
-export default function Main() {
-  const [posts, setPosts] = useState<{[x: string]: any; prompt: string; platforms: string[]; createdAt: string }[]>([]);
-  const [refreshing, setRefreshing] = useState(false);
-  const [loading, setLoading] = useState(true);
+function Main() {
+  const [activeTab, setActiveTab] = useState(0); 
 
-  const router = useRouter();
-
-  const fetchPosts = async () => {
-    try {
-      const response = await getPosts();
-      setPosts(response.data);
-    } catch (error) {
-      console.error("Error fetching posts:", error);
-    } finally {
-      setLoading(false);
-    }
+  const handleTabPress = (index: number) => {
+    setActiveTab(index); 
   };
 
-  useFocusEffect(
-    useCallback(() => {
-      fetchPosts();
-    }, [])
-  );
-
-  const onRefresh = useCallback(() => {
-    setRefreshing(true);
-    fetchPosts().finally(() => setRefreshing(false));
-  }, []);
-
-  if (loading) {
-    return (
-      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-        <ActivityIndicator size="large" color="#0000ff" />
-      </View>
-    );
-  }
-
   return (
-    <View style={{ flex: 1 }}>
+    <View style={{ flex: 1, backgroundColor: "#021F59" }}>
       <View style={styles.header}>
-        <Text style={styles.headerText}>Posts</Text>
+        <Text style={styles.headerText}>POSTS</Text>
       </View>
-
-      <ScrollView
-        contentContainerStyle={{ flexGrow: 1, alignItems: "center" }}
-        refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
-      >
-        {posts
-          .slice()
-          .reverse()
-          .map((post, index) => (
-            <TouchableOpacity onPress={() => router.push(`./${post._id}`)} key={index}>
-              <PostCard prompt={post.prompt} platforms={post.platforms} createdAt={post.createdAt} />
+      <View style={styles.tabBar}>
+        <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
+          {["Instagram", "X", "Linkedin", "Facebook"].map((filter, index) => (
+            <TouchableOpacity
+              key={index}
+              style={[styles.tabButton, activeTab === index && styles.activeTab]}
+              onPress={() => handleTabPress(index)}
+            >
+              <Text style={[styles.tabText, activeTab === index && styles.activeTabText]}>
+                {filter}
+              </Text>
             </TouchableOpacity>
           ))}
-      </ScrollView>
+        </ScrollView>
+      </View>
+      <PostView />
     </View>
   );
 }
@@ -69,16 +38,49 @@ const styles = StyleSheet.create({
   header: {
     paddingTop: 10,
     paddingBottom: 20,
-    backgroundColor: "#fff",
+    backgroundColor: "#021F59",
     width: "100%",
     alignItems: "center",
     justifyContent: "center",
     borderBottomWidth: 1,
-    borderBottomColor: "#ddd",
   },
   headerText: {
     fontSize: 24,
     fontWeight: "bold",
-    color: "#333",
+    color: "#F2AD94",
+    marginTop: 25,
+    fontFamily: "Roboto-Bold",
+  },
+  tabBar: {
+    flexDirection: "row",
+    justifyContent: "flex-start",
+    width: "100%",
+    paddingVertical: 10,
+    borderBottomWidth: 1,
+    backgroundColor: "#021F59",
+    marginBottom: 0,
+  },
+  tabButton: {
+    alignItems: "center",
+    backgroundColor: "#3D90D9",
+    paddingVertical: 8,
+    paddingHorizontal: 20,
+    borderRadius: 30,
+    marginRight: 10,
+    marginLeft: 10,
+  },
+  tabText: {
+    fontSize: 16,
+    fontWeight: "600",
+    color: "#fff",
+  },
+  activeTab: {
+    backgroundColor: "#F2B705",
+    transform: [{ scale: 1.1 }],
+  },
+  activeTabText: {
+    color: "#021F59", 
   },
 });
+
+export default Main;

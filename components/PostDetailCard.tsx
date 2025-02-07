@@ -25,7 +25,7 @@ const PostDetailCard: React.FC<PostDetailCardProps> = ({ platform, content, hash
     <View style={styles.card}>
       <TouchableOpacity style={styles.header} onPress={() => setIsOpen(!isOpen)}>
         <Text style={styles.platform}>{platform}</Text>
-        <Text style={styles.button}>{isOpen ? "Hide" : "Show"}</Text>
+        <Text style={styles.button}>...</Text>
       </TouchableOpacity>
 
       {isOpen && (
@@ -33,18 +33,18 @@ const PostDetailCard: React.FC<PostDetailCardProps> = ({ platform, content, hash
           <View style={styles.copyContainer}>
             <Text style={styles.text}>{content}</Text>
             <TouchableOpacity onPress={() => copyToClipboard(content)}>
-              <Ionicons name="copy-outline" size={24} color="#007AFF" />
+              <Ionicons name="copy-outline" size={24} color="#fff" />
             </TouchableOpacity>
           </View>
 
           <View style={styles.hashtagContainer}>
             <View style={styles.hashtagsWrapper}>
               {hashtags.map((hashtag, index) => (
-                <Text key={index} style={styles.hashtag}>#{hashtag} </Text>
+                <Text key={index} style={styles.hashtag}>#{hashtag}</Text>
               ))}
             </View>
             <TouchableOpacity onPress={copyHashtags}>
-              <Ionicons name="copy-outline" size={24} color="#007AFF" />
+              <Ionicons name="copy-outline" size={24} color="#fff" />
             </TouchableOpacity>
           </View>
         </View>
@@ -55,7 +55,7 @@ const PostDetailCard: React.FC<PostDetailCardProps> = ({ platform, content, hash
 
 const styles = StyleSheet.create({
   card: {
-    backgroundColor: "#fff",
+    backgroundColor: "#3D90D9",
     padding: 15,
     marginBottom: 10,
     borderRadius: 8,
@@ -69,10 +69,12 @@ const styles = StyleSheet.create({
   platform: {
     fontSize: 18,
     fontWeight: "bold",
+    color: "#fff",
   },
   button: {
-    fontSize: 16,
-    color: "#007AFF",
+    fontSize: 26,
+    color: "#000",
+    fontWeight: "bold",
   },
   content: {
     marginTop: 10,
@@ -100,8 +102,9 @@ const styles = StyleSheet.create({
   },
   hashtag: {
     fontSize: 14,
-    color: "#007AFF",
-    marginRight: 5,
+    color: "#fff",
+    marginRight: 0,
+    fontFamily: "monospace",
   },
 });
 

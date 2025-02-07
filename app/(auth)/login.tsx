@@ -1,6 +1,6 @@
 import { View, Text, Alert, ActivityIndicator, TouchableOpacity } from "react-native";
 import { useEffect, useState } from "react";
-import { TextInput, Button } from "react-native";
+import { TextInput } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useRouter } from "expo-router";
 import { login } from "../../api/auth";
@@ -57,20 +57,38 @@ export default function Login() {
   };
 
   return (
-    <View style={{ flex: 1, justifyContent: "center", alignItems: "center", padding: 20 }}>
-      <Text style={{ marginBottom: 30, fontSize: 25, fontWeight: "bold" }}>Login Screen</Text>
+    <View style={{ flex: 1, justifyContent: "center", alignItems: "center", backgroundColor: "#021F59", padding: 20 }}>
+      <Ionicons
+              name="arrow-back"
+              size={30}
+              color="black"
+              style={{ position: "absolute",
+                top: 20, 
+                left: 20,
+                zIndex: 1,
+                backgroundColor: "#F2AD94",
+                borderRadius: 20,
+                padding: 5, 
+                marginTop: 20,}}
+              onPress={() => router.replace('./welcome')}
+            />
+      <Text style={{ marginBottom: 30, fontSize: 26, fontWeight: "bold", color: "#F2AD94" }}>
+        Login
+      </Text>
 
       <TextInput
         placeholder="Email"
         value={email}
         onChangeText={setEmail}
         style={{
-          height: 40,
-          borderColor: "gray",
-          borderWidth: 1,
-          marginBottom: 10,
+          height: 45,
+          borderColor: "#F2AD94",
+          borderWidth: 2,
+          borderRadius: 10,
+          marginBottom: 15,
           width: "100%",
-          paddingHorizontal: 10,
+          paddingHorizontal: 15,
+          backgroundColor: "#FFF",
         }}
         keyboardType="email-address"
         autoCapitalize="none"
@@ -83,12 +101,14 @@ export default function Login() {
           onChangeText={setPassword}
           secureTextEntry={!passwordVisible}
           style={{
-            height: 40,
-            borderColor: "gray",
-            borderWidth: 1,
+            height: 45,
+            borderColor: "#F2AD94",
+            borderWidth: 2,
+            borderRadius: 10,
             marginBottom: 20,
             width: "100%",
-            paddingHorizontal: 10,
+            paddingHorizontal: 15,
+            backgroundColor: "#FFF",
           }}
           autoCapitalize="none"
         />
@@ -96,24 +116,37 @@ export default function Login() {
         <TouchableOpacity
           style={{
             position: "absolute",
-            right: 10,
+            right: 15,
             top: "50%",
-            transform: [{ translateY: -20 }],
+            transform: [{ translateY: -18 }],
           }}
           onPress={() => setPasswordVisible((prevState) => !prevState)} 
         >
           <Ionicons
             name={passwordVisible ? "eye-off" : "eye"} 
             size={24}
-            color="gray"
+            color="#F2AD94"
           />
         </TouchableOpacity>
       </View>
 
-      <Button title="Login" onPress={handleLogin} />
+      <TouchableOpacity
+        onPress={handleLogin}
+        style={{
+          backgroundColor: "#3D90D9",
+          paddingVertical: 12,
+          paddingHorizontal: 50,
+          borderRadius: 10,
+          marginTop: 10,
+        }}
+      >
+        <Text style={{ fontSize: 18, fontWeight: "bold", color: "#fff" }}>
+          Login
+        </Text>
+      </TouchableOpacity>
       
       {loading && (
-        <ActivityIndicator size="large" color="blue" style={{ marginTop: 20 }} />
+        <ActivityIndicator size="large" color="#3D90D9" style={{ marginTop: 20 }} />
       )}
     </View>
   );
